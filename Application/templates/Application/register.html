@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <form method="post" action="{% url 'register' %}">
+        {% csrf_token %}
+        <h1>Register</h1>
+        {% if messages %}
+            <p style="color: red;">{{ messages }}</p>
+        {% endif %}
+        <label for="user_name">Username:</label>
+        <input type="text" id="user_name" name="user_name" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" minlength="8" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" required>
+
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" required>
+
+        <label for="pay">Payment:</label>
+        <input type="text" id="pay" name="pay">
+
+        <label for="role">Role:</label>
+        <select id="role" name="role">
+            <option value="Customer">Customer</option>
+            <option value="Shop">Shop</option>
+            <option value="Shipper">Shipper</option>
+        </select>
+
+        <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+</body>
+</html>

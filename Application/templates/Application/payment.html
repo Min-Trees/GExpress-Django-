@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+</head>
+<body>
+    <form method="post" action="{%url 'payment'%}">
+        {% csrf_token %}
+        <h1>Payment</h1>
+        <label for="account_pay"> Account Pay</label>
+        <input type="text" id="account_pay" name="account_pay" required>
+        
+        <label for="account_name"> Accoutn Name</label>
+        <input type="text" id="account_name" name="account_name" required>
+
+        <label for="cvv_pay"> Cvv </label>
+        <input type="number" id="cvv_pay" name="cvv_pay" required>
+
+        <label for="expiration_month"></label>
+        <input type="number" id="expiration_month" name="expiration_month" required>
+
+        <label for="expiration_year"></label>
+        <input type="number" id="expiration_year" name="expiration_year" required>
+        <button type="submit">Done</button>
+    </form>
+</body>
+</html>
