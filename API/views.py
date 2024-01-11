@@ -6,7 +6,7 @@ from .models import TranSport_API
 from rest_framework import status
 from .models import TranSport_API
 from django.db.models import Q
-
+from django.views.decorators.csrf import csrf_exempt
 
 def CreateTranSport(request):
     if request.method == 'POST':
@@ -114,14 +114,16 @@ def Price(request):
             from_province = data.get('from_province')
             to_province = data.get('to_province')
             transport_price = 15000
-
+            
             if weight > 1.0:
                 mass = weight / 3;
                 transport_price = transport_price + (int(mass)*5000)
-            if from_province != to_province:
-                transport_price = transport_price + 10000
-            if quantity > 1 and weight > 2:
-                transport_price = transport_price * (int(quantity)*5000)
+            if from_province:
+                if from_province != to_province:
+                    transport_price = transport_price + 10000
+            if quantity:
+                if quantity > 1 and weight > 2:
+                    transport_price = transport_price * (int(quantity)*5000)
                 
             response_data = {
                 "status": HTTPStatus.OK,
