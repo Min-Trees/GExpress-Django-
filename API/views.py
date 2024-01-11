@@ -115,6 +115,8 @@ def Price(request):
             to_province = data.get('to_province')
             transport_price = 15000
             
+            weight = weight/1000;
+            
             if weight > 1.0:
                 mass = weight / 3;
                 transport_price = transport_price + (int(mass)*5000)
