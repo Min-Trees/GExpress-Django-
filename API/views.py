@@ -104,7 +104,7 @@ def CreateTranSport(request):
     
     
     
-    
+@csrf_exempt  
 def Price(request):
     if request.method == "POST":
         try:
