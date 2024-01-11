@@ -109,7 +109,7 @@ def Price(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body.decode("utf-8"))
-            weight = data.get('weight')
+            weight = float(data.get('weight'))
             quantity = data.get('quantity')
             from_province = data.get('from_province')
             to_province = data.get('to_province')
