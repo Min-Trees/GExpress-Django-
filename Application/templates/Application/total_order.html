@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Orders</title>
+</head>
+<body>
+    <h1>Đơn hàng của người dùng {{ orders.id_customer }}</h1>
+
+    {% if orders %}
+        <ul>
+            {% for order in orders %}
+                <li> {{ order.id_product.name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Không có đơn hàng nào cho người dùng này.</p>
+    {% endif %}
+</body>
+</html>

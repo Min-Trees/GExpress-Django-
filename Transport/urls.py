@@ -19,7 +19,6 @@ from django.urls import path , include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('GExpress/',include('Application.urls')),
-    path('GEpress/api/v1/',include('API.urls')),
-    
+    path('',include('Application.urls')),
+    path('GExpress/api/v1/',include('API.urls')),
 ]

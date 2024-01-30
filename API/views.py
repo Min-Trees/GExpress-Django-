@@ -1,34 +1,40 @@
 from http import HTTPStatus
 import json
 from django.shortcuts import get_object_or_404, render
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from .models import TranSport_API
 from rest_framework import status
 from .models import TranSport_API
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 
+
+def create(request):
+    return render(request, 'API/create_transport.html')
+
+def info(request):
+    return render(request, 'API/info_transport.html')
+@csrf_exempt  
 def CreateTranSport(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode("utf-8"))
-            transport_name = data.get('transport_name')
-            #transport_price = data.get()'transport_price']
             weight = data.get('weight')
             name_ownerShop = data.get('name_ownerShop')
             name_customer = data.get('name_customer')
+            product_name = data.get('product_name')
+            quantity = data.get('quantity')
             description = data.get('description')
             customer_phone = data.get('customer_phone')
             from_district = data.get('from_district')
             from_province = data.get('from_province')
             to_district = data.get('to_district')
             to_province = data.get('to_province')
-            #post_offices = data.get('post_offices')
             expected_date = data.get('expected_date')
             transport_price = data.get('transport_price')
             created_at = data.get('created_at')
             updated_at = data.get('updated_at')
-            if None in [transport_name, weight, name_ownerShop, name_customer, description, customer_phone, from_district, from_province, to_district, to_province, expected_date,transport_price, created_at, updated_at]:
+            if None in [ weight, name_ownerShop, name_customer, description, customer_phone, from_district, from_province, to_district, to_province, expected_date,transport_price, created_at, updated_at, product_name, quantity]:
                 response_data = {
                     "status": HTTPStatus.BAD_REQUEST,
                     "mess": "bad request",
@@ -36,16 +42,24 @@ def CreateTranSport(request):
                     "body": {"data": False, "error": "bad request"},
                 }
                 return JsonResponse(response_data, status=status.HTTP_400_BAD_REQUEST)
+            # price of transport
+            weight = weight/1000;
             if weight > 1.0:
                 mass = weight / 3;
                 transport_price = transport_price + (int(mass)*5000)
-            if from_province != to_province:
-                transport_price = transport_price + 20000
+            if from_province:
+                if from_province != to_province:
+                    transport_price = transport_price + 10000
+            if quantity:
+                if quantity > 1 and weight > 2:
+                    transport_price = transport_price * (int(quantity)*5000)
+                    
             transport = TranSport_API(
-                transport_name=transport_name,
                 weight=weight,
                 name_ownerShop=name_ownerShop,
                 name_customer=name_customer,
+                product_name = product_name,
+                quantity = quantity,
                 description=description,
                 customer_phone=customer_phone,
                 from_district=from_district,
@@ -58,26 +72,34 @@ def CreateTranSport(request):
                 updated_at=updated_at
             )
             transport.save()
+            
             response_data = {
                 "status": HTTPStatus.OK,
                 "mess": "success",
                 "serviceName": "TransportAPI",
                 "body": {
-                    "data":{
+                     "data":{
                         "id": transport.transport_id,
-                        "transport_code": transport.transprot_code,
-                        "transport_name": transport.transport_name,
-                        "weight": transport.weight,
-                        "name_ownerShop": transport.name_ownerShop,
-                        "name_customer": transport.name_customer,
-                        "description": transport.description,
-                        "customer_phone": transport.customer_phone,
-                        "from_district": transport.from_district,
-                        "from_province": transport.from_province,
-                        "to_district": transport.to_district,
-                        "to_province": transport.to_province,
-                        "expected_date": transport.expected_date,
-                        "transport_price": transport.transport_price,
+                        "ownershop":{
+                            "name_ownerShop": transport.name_ownerShop,
+                            "from_district": transport.from_district,
+                            "from_province": transport.from_province,
+                        },
+                        "customer":{
+                            "name_customer": transport.name_customer,        
+                            "customer_phone": transport.customer_phone,
+                            "to_district": transport.to_district,
+                            "to_province": transport.to_province,
+                        },
+                        "order":{                            
+                            "transport_code": transport.transprot_code,
+                            "product_name": transport.product_name,
+                            "quantity": transport.quantity,
+                            "description": transport.description,
+                            "weight": transport.weight,
+                            "expected_date": transport.expected_date,
+                            "transport_price": transport.transport_price,
+                        },
                         "created_at": transport.created_at,
                         "updated_at": transport.updated_at
                     }
@@ -115,10 +137,9 @@ def Price(request):
             to_province = data.get('to_province')
             transport_price = 15000
             
-            weight = weight/1000;
-            
+            weight = weight/1000
             if weight > 1.0:
-                mass = weight / 3;
+                mass = weight / 3
                 transport_price = transport_price + (int(mass)*5000)
             if from_province:
                 if from_province != to_province:
@@ -151,16 +172,17 @@ def Price(request):
 
 
 
-
+@csrf_exempt  
 def UpdateTranSportAPI(request, transport_id):
     if request.method == "PATCH":
         try:
             transport = get_object_or_404(TranSport_API, uuid=transport_id)
             data = json.loads(request.body)
-            new_transport_name = data.get('transport_name')
             new_weight = data.get('weight')
             new_name_ownerShop = data.get('name_ownerShop')
             new_name_customer = data.get('name_customer')
+            new_product_name = data.get('product_name')
+            new_quantity = data.get('quantity')
             new_description = data.get('description')
             new_customer_phone = data.get('customer_phone')
             new_from_district = data.get('from_district')
@@ -171,11 +193,13 @@ def UpdateTranSportAPI(request, transport_id):
             new_transport_price = data.get('transport_price')
             new_created_at = data.get('created_at')
             new_updated_at = data.get('updated_at')
-            
-            if new_transport_name:
-                transport.transport_name = new_transport_name
+
             if new_weight:
                 transport.weight = new_weight
+            if new_product_name:
+                transport.product_name = new_product_name
+            if new_quantity:
+                transport.quantity = new_quantity
             if new_name_ownerShop:
                 transport.name_ownerShop = new_name_ownerShop
             if new_name_customer:
@@ -209,19 +233,26 @@ def UpdateTranSportAPI(request, transport_id):
                 "body": {
                     "data":{
                         "id": transport.transport_id,
-                        "transport_code": transport.transprot_code,
-                        "transport_name": transport.transport_name,
-                        "weight": transport.weight,
-                        "name_ownerShop": transport.name_ownerShop,
-                        "name_customer": transport.name_customer,
-                        "description": transport.description,
-                        "customer_phone": transport.customer_phone,
-                        "from_district": transport.from_district,
-                        "from_province": transport.from_province,
-                        "to_district": transport.to_district,
-                        "to_province": transport.to_province,
-                        "expected_date": transport.expected_date,
-                        "transport_price": transport.transport_price,
+                        "ownershop":{
+                            "name_ownerShop": transport.name_ownerShop,
+                            "from_district": transport.from_district,
+                            "from_province": transport.from_province,
+                        },
+                        "customer":{
+                            "name_customer": transport.name_customer,        
+                            "customer_phone": transport.customer_phone,
+                            "to_district": transport.to_district,
+                            "to_province": transport.to_province,
+                        },
+                        "order":{                            
+                            "transport_code": transport.transprot_code,
+                            "product_name": transport.product_name,
+                            "quantity": transport.quantity,
+                            "description": transport.description,
+                            "weight": transport.weight,
+                            "expected_date": transport.expected_date,
+                            "transport_price": transport.transport_price,
+                        },
                         "created_at": transport.created_at,
                         "updated_at": transport.updated_at
                     }
@@ -239,42 +270,96 @@ def UpdateTranSportAPI(request, transport_id):
             return JsonResponse(response_data, status=HTTPStatus.NOT_FOUND)
         
         
+        
+def manager(request):
+    return render(request, 'API/manager.html')
+        
+
+# @csrf_exempt
+# def info_transport(request):
+#     try:
+#         transport = get_object_or_404(TranSport_API, transport_code=transport_code)
+#         context = {
+#             'transport': transport
+#         }
+#         print(context)
+#         return render(request, 'API/info_transport.html', context)
+    
+            
+#     except:
+#         response_data = {
+#             "status": HTTPStatus.NOT_FOUND,
+#             "mess": "not found",
+#             "serviceName": "TransportAPI",
+#             "body": {"data": False, "error": "not found"},
+#         }
+#         return JsonResponse(response_data, status=HTTPStatus.NOT_FOUND)
+
+def home(request):
+    return render(request, 'API/base.html')
+
+@csrf_exempt
+def info_transport(request):
+    if request.method == "POST":
+        transport_code = request.POST.get('transport_code', '')
+        try:
+            transport = get_object_or_404(TranSport_API, transport_code=transport_code)
+            context = {
+                'transport': transport
+            }
+            print(context)
+            return render(request, 'API/info_transport.html', context)
+        except:
+            return render(request, 'API/info_transport.html')
+    else:
+        # Xử lý trường hợp GET nếu cần
+        return render(request, 'API/info_transport.html')
+
+@csrf_exempt        
 def Search_Transport(request):
     try:
-        keyword = request.GET.get('keyword' , '')
-        transport = TranSport_API.objects.filter(Q(transport_code = keyword)).first()
-        if transport is None:
-            response_data = {
-                "status": HTTPStatus.NOT_FOUND,
-                "mess": "not found",
-                "serviceName": "TransportAPI",
-                "body": {"data": False, "error": "not found"},
-            }
-            return JsonResponse(response_data, status=HTTPStatus.NOT_FOUND)
+        keyword = request.GET.get('keyword', '')
+        
+        if not keyword:
+            return render(request, 'API/manager.html', {'transport_code': keyword})
+
+        transport = get_object_or_404(TranSport_API, transprot_code=keyword)
+        
         response_data = {
             "status": HTTPStatus.OK,
             "mess": "success",
             "serviceName": "TransportAPI",
-            "body":{
-                "data":{
-                "transport_code": transport.transprot_code,
-                "transport_name": transport.transport_name,
-                "weight": transport.weight,
-                "name_ownerShop": transport.name_ownerShop,
-                "name_customer": transport.name_customer,
-                "description": transport.description,
-                "customer_phone": transport.customer_phone,
-                "from_district": transport.from_district,
-                "from_province": transport.from_province,
-                "to_district": transport.to_district,
-                "to_province": transport.to_province,
-                "expected_date": transport.expected_date,
-                "transport_price": transport.transport_price,
-                "created_at": transport.created_at,
-                "updated_at": transport.updated_at
+            "body": {
+                "data": {
+                    "id": transport.transport_id,
+                    "ownershop": {
+                        "name_ownerShop": transport.name_ownerShop,
+                        "from_district": transport.from_district,
+                        "from_province": transport.from_province,
+                    },
+                    "customer": {
+                        "name_customer": transport.name_customer,
+                        "customer_phone": transport.customer_phone,
+                        "to_district": transport.to_district,
+                        "to_province": transport.to_province,
+                    },
+                    "order": {
+                        "transport_code": transport.transport_code,
+                        "product_name": transport.product_name,
+                        "quantity": transport.quantity,
+                        "description": transport.description,
+                        "weight": transport.weight,
+                        "expected_date": transport.expected_date,
+                        "transport_price": transport.transport_price,
+                    },
+                    "created_at": transport.created_at,
+                    "updated_at": transport.updated_at
                 }
             }
         }
+        
+        return JsonResponse(response_data, status=HTTPStatus.OK)
+    
     except Exception as e:
         print(e)
         response_data = {

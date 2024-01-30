@@ -1,0 +1,44 @@
+{% extends 'Application/guest.html' %}
+{% load static %}
+{% block guest %}
+
+<body>
+    <div class="wrapper-signup" >
+        <form method="post" action="{% url 'signup' %}">
+            {% csrf_token %}
+            <h1>Register</h1>
+
+            <div class="input-box">
+                <input type="text" id="user_name" name="user_name" placeholder="User Name" required>
+            </div>
+            <div class="input-box">
+                <input type="password" id="password" name="password" minlength="8" placeholder="PassWord" required>
+            </div>
+            <div class="input-box">
+                <input type="password" id="confirm_password" name="confirm_password" minlength="8" placeholder="Confirm Password" required>
+            </div>
+            <div class="input-box">
+                <input type="text" id="first_name" name="first_name" placeholder="First Name" required>
+            </div>
+            <div class="input-box">
+                <input type="text" id="last_name" name="last_name" placeholder="Last Name" required>
+            </div>
+            <div class="input-box">
+                <input type="text" id="email" name="email" placeholder="Email" required>
+            </div>
+
+            <div class="input-box">
+                <select id="role" name="role" >
+                    <option value="Customer">Customer</option>
+                    <option value="Shop">Shop</option>
+                    <option value="Shipper">Shipper</option>
+                </select>
+            </div>
+            <button type="submit" class = "btn ">Register</button>
+        </form>
+        <div class="message-login">
+            <p>Already have an account? <button class="btn-login"><a href="{% url 'login' %}">Login here</a></button> </p>
+        </div>
+    </div>
+</body>
+{% endblock guest %}

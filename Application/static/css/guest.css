@@ -1,0 +1,238 @@
+body{
+    background-color: #010509;
+
+}
+.header {
+    background-color: #010509;
+    color: white;
+    padding: 10px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+.navbar ul {
+    display: flex;
+    list-style-type: none;
+}
+
+/* Styling cho thanh điều hướng bên trái */
+.left-nav {
+    display: flex;
+    margin-left: 30px;
+}
+
+.left-nav li {
+    margin-right: 15px;
+    padding-left: 15px;
+}
+
+ul{
+    list-style: none;
+
+}
+
+ul li{
+    display: inline-block;
+
+}
+
+ul li a{
+    display: block;
+    padding: 10px 10px;
+    color: white;
+    text-decoration: none;
+}
+
+ul li ul.drop-down li{
+    display: block;
+}
+
+ul li ul.drop-down{
+    width: auto;
+    position: absolute;
+    z-index: 999;
+    display: none;
+}
+
+
+ul li:hover ul.drop-down{
+    display: block;
+}
+ 
+.left-nav a {
+    color: white;
+    text-decoration: none;
+}
+
+.left-nav a:hover {
+    color: #a12525;
+}
+
+
+/* Styling login */
+.wrapper h1{
+    text-align: center;
+    color: #2E8B57;
+    font-size: 40px;
+    font-weight: 600;
+    margin-top:100px;
+}
+
+.wrapper{
+    background-color: none;
+    border: #FF4500 3px solid;
+    width: 300px;
+    height:350px;
+    margin: auto;
+    border-radius: 30px;
+}
+
+.input-box{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    justify-content: center;
+    width: 85%;
+    padding: 6px;
+    font-size: 20px;
+}
+
+.input-box input{
+    width: 80%;
+    height: 20px;
+    font-size: 16px;
+    color:#fff;
+    padding: 5px;
+    border-radius: 30px;
+    border:none;
+    outline: none;
+}
+
+.wrapper .btn{
+    width: 40%;
+    height: 30px;
+    margin-left: 5%;
+    border-radius: 40px;
+    font-size: 19px;
+    margin-left: 30%;
+    background-color: #2E8B57;
+}
+
+.wrapper .btn:hover{
+    background-color:#FF4500;
+    color: #090303;
+}
+
+.wrapper .message-register{
+    margin-left: 5%;
+}
+
+.wrapper .message-register p{
+    color: #ca0d0d;
+    font-size: 16px;
+}   
+
+.wrapper .message-register a{
+    color: #fff;
+    text-decoration: none;
+}
+
+.wrapper .message-register a:hover{
+    color: #1d73b0;
+    text-decoration: none;
+}
+.btn-resgister{
+    background-color: #2E8B57;
+}
+/* Styling register */
+
+
+.wrapper-signup h1{
+    text-align: center;
+    color: #2E8B57;
+    font-size: 40px;
+    font-weight: 600;
+    margin-top:100px;
+}
+
+.wrapper-signup{
+    background-color: none;
+    border: #FF4500 3px solid;
+    width: 300px;
+    height:550px;
+    margin: auto;
+    border-radius: 30px;
+}
+
+.input-box{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    justify-content: center;
+    width: 85%;
+    padding: 6px;
+    font-size: 20px;
+}
+
+.input-box input{
+    width: 80%;
+    height: 20px;
+    font-size: 16px;
+    color:#fff;
+    padding: 5px;
+    border-radius: 30px;
+    border:none;
+    outline: none;
+}
+
+.wrapper-signup .btn{
+    width: 40%;
+    height: 20px;
+    margin-left: 5%;
+    border-radius: 40px;
+    font-size: 19px;
+    margin-left: 30%;
+    background-color: #2E8B57;
+}
+
+.wrapper-signup .btn:hover{
+    background-color:#FF4500;
+    color: #090303;
+}
+
+.wrapper-signup .message-login{
+    margin-left: 5%;
+}
+
+.wrapper-signup .message-login p{
+    color: #ca0d0d;
+    font-size: 16px;
+}   
+
+.wrapper-signup select{
+    width: 80%;
+    height: 30px;
+    font-size: 16px;
+    color:#fff;
+    padding: 5px;
+    border-radius: 30px;
+    border:none;
+    outline: none;
+}
+
+.wrapper-signup .message-login a{
+    color: #fff;
+    text-decoration: none;
+}
+
+.wrapper-signup .message-login a:hover{
+    color: #1d73b0;
+    text-decoration: none;
+}
+.btn-login{
+    background-color: #2E8B57;
+}

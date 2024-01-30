@@ -1,0 +1,52 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet"  type = "text/css" href="{% static 'css/home.css' %}">
+
+</head>
+<body>
+        <div class="header">
+            <div class="navbar">
+                <div class="left-nav">
+                    <ul>
+                        <li><img src="{% static 'images/logo.jpg' %}" class="logo" width="50px"></li>
+                        <li><a href="{% url 'home' %}">Trang chủ</a></li>
+                        <li>
+                            <a href="#">Dịch Vụ </a>
+                                <ul class="drop-down">
+                                    <li><a href="{% url 'create' %}">Dịch vụ vận chuyển</a></li>
+                                    <li><a href="#">Dịch vụ giao hàng</a></li>
+                                    <li><a href="#">Ưu Đãi</a></li>
+                                </ul>
+                        </li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="{% url 'info_transport' %}">Tra cứu vận đơn</a></li>
+
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li>
+                            <a href="{% url 'profile' %}"> Tài Khoản</a>
+                            <ul class="drop-down">
+                                <li><a href="profile">Hồ sơ của tôi</a></li>
+                                <li><a href="{% url 'total_order' user_id=request.user.user_id %}">Đơn hàng đã vận chuyển</a></li>
+                                <li><a href="#">Ưu Đãi</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'guest' %}">Đăng Xuất</a></li>
+                    </ul>
+                </div>
+            </div>
+        <div class="container">
+            {% block content %}
+
+            {% endblock content %}
+        </div>
+</body>
+</html>

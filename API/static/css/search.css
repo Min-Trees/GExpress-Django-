@@ -1,0 +1,30 @@
+body{
+    background-color:#3CB371 ;
+}
+
+.info {
+    width: 50%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 3%;
+}
+
+.search{
+    margin-left: 50%;
+}
+.search input{
+    border-radius: 10px;
+}
+.search button{
+    border-radius: 10px;
+}
+
+.search button:hover{
+    background-color: #FF4500;
+}
+
+.info .info-colum p{
+    font-size: 18px;
+    margin-left: 5%;
+}

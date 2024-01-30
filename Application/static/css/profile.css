@@ -1,0 +1,18 @@
+body{
+    background: #010509;
+}
+
+.profile{
+    width:30%;
+    height: 100%;
+    margin: 0 auto;
+    margin-top: 10%;
+    background-color: aquamarine;
+}
+
+.info-profile{
+    margin-left: 10%;
+}
+.icon-profile i {
+    margin-left: 40%;
+}

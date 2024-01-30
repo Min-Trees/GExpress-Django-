@@ -1,0 +1,40 @@
+{% extends 'API/base.html' %}
+{% load static %}
+{% block content %}
+
+<body>
+    <div class="search">
+        <form method="POST" action="{% url 'info_transport' %}" class="input-search">
+            {% csrf_token %}
+            <label for="transport_code">Nhập mã vận chuyển:</label>
+            <input type="text" name="transport_code" id="transport_code" required>
+            <button type="submit">Tìm</button>
+        </form>
+    </div>
+    {% if transport %}
+    <div class="info">
+        <h3>Thông tin vận chuyển : {{transport.status}}</h3>
+        <div class="info-colum">
+            <p>Product Name: {{ transport.product_name }}</p>
+            <p>Quantity: {{ transport.quantity }}</p>
+            <p>Weight: {{ transport.weight }} gr</p>
+            <p>Transport Price: {{ transport.transport_price }} đ</p>
+            <p> Shop: {{ transport.name_ownerShop }}</p>
+            <p>From District: {{ transport.from_district }}</p>
+            <p>From Province: {{ transport.from_province }}</p>
+            <p>Customer Name: {{ transport.name_customer }}</p>
+            <p>Description: {{ transport.description }}</p>
+            <p> Date receive: {{transport.expected_date}}</p>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="info">
+        <h1>Thông tin vận chuyển :</h1>
+        <div class="info-colum">
+            <p>Không tìm thấy mã vận chuyển</p>
+        </div>
+    {% endif %}
+    
+</body>
+{% endblock %}

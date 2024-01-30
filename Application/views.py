@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import Transport, Order , Payment , TransportByEcm
+from .models import Transport, Order , Payment , TransportByEcm , Total_Order
 from .serializers import  Serializers_Transprot , Serializers_Order , Serializers_Transprot_By_Ecm
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -135,7 +135,7 @@ def register(request):
         messages.success(request, 'Account created successfully. Please login.')
             
         return redirect('login')
-    return render(request, 'Application/register.html')
+    return render(request, 'Application/signup.html')
  
 def user_login(request):
     if request.method == 'POST':
@@ -187,3 +187,18 @@ def check_order(request):
     
     
 
+def guest(request):
+    return render(request, 'Application/guest.html')
+
+def profile(request):
+    user = request.user
+    print(user)
+    return render(request, 'Application/profile.html', {'user': user})
+
+@login_required
+def total_order(request, user_id):
+    orders = Order.objects.filter(id_customer=user_id)
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'Application/total_order.html', context)

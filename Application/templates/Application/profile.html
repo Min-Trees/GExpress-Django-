@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet"  type = "text/css" href="{% static 'css/profile.css' %}">
+
+</head>
+<body>
+    <div class="profile">
+        <div class="icon-profile">
+            <i class="glyphicon glyphicon-user"  style="font-size:50px;"></i>
+        </div>
+            <div class="info-profile">
+                <h4>Tên tài khoản :{{user.user_name}}</h4>
+                <p>Email : {{user.email}}</p>
+                <p>Số điện thoai :{{user.phone}}</p>
+                <p>Chức năng : {{user.role}}</p>
+            </div>
+    </div>
+</body>
+</html>          

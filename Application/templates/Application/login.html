@@ -1,25 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
+{% extends 'Application/guest.html' %}
+{% load static %}
+{% block guest %}
+
 <body>
-    <form method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-        <h1>Login</h1>
-        {% if messages %}
-            <p style="color: red;">{{ messages }}</p>
-        {% endif %}
-        <label for="user_name">Username:</label>
-        <input type="text" id="user_name" name="user_name" required>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-
-        <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+    <div class="wrapper">
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <h1>Login</h1>
+            <div class="input-box">
+                <input type="text" id="user_name" name="user_name" placeholder="User Name" required>
+            </div>
+            <div class="input-box">
+                <input type="password" id="password" name="password"  placeholder="Password" required>
+            </div>
+            <button type="submit" class = "btn">Login</button>
+        </form>
+        <div class="message-register">
+            <p>Don't have an account? <button class="btn-resgister"><a href="{% url 'signup' %} " >Register here</a></button></p>
+        </div>
+    </div>
 </body>
-</html>
+{% endblock guest %}
+

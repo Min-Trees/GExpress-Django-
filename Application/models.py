@@ -1,27 +1,82 @@
 
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 import uuid
 from django.core.validators import MaxValueValidator
-class Account(models.Model):
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+import secrets
+
+class AccountManager(BaseUserManager):
+    def create_user(self, user_name, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        user = self.model(user_name=user_name, email=self.normalize_email(email), **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, user_name, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(user_name, email, password, **extra_fields)
+
+class Account(AbstractBaseUser, PermissionsMixin):
     CUSTOMER = 'Customer'
     SHOP = 'Shop'
     SHIPPER = 'Shipper'
     ROLE_CHOICES = [
-        (CUSTOMER,'Customer'),
-        (SHOP,'Shop'),
-        (SHIPPER,'Shipper')
+        (CUSTOMER, 'Customer'),
+        (SHOP, 'Shop'),
+        (SHIPPER, 'Shipper')
     ]
-    user_id = models.UUIDField(primary_key=True,default=uuid.uuid4)
-    user_name = models.CharField(max_length = 100)
-    password = models.CharField(max_length = 20)
-    email = models.EmailField(max_length = 200)
-    phone = models.CharField(max_length = 12)
-    address = models.CharField(max_length = 400)
-    role = models.CharField(ROLE_CHOICES, default = CUSTOMER, max_length=10)
-    def __str__(self): 
-        return self.user_name , self.role
-    
+
+    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_name = models.CharField(max_length=100, unique=True)
+    email = models.EmailField(max_length=200, unique=True)
+    phone = models.CharField(max_length=12, blank=True)
+    address = models.CharField(max_length=400, blank=True)
+    role = models.CharField(choices=ROLE_CHOICES, default=CUSTOMER, max_length=10)
+
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = AccountManager()
+
+    USERNAME_FIELD = 'user_name'
+    REQUIRED_FIELDS = ['email']
+
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name=_('groups'),
+        blank=True,
+        related_name='account_groups'
+    )
+
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name=_('user permissions'),
+        blank=True,
+        related_name='account_user_permissions'
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user_name
+
+    class Meta:
+        ordering = ['-created_at']
+
+class CustomUser(Account):
+    # Bất kỳ trường hoặc phương thức tùy chỉnh nào bạn muốn thêm vào CustomUser
+    # có thể được thêm ở đây
+    pass
 # Create your models here.
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
@@ -42,8 +97,13 @@ class Order(models.Model):
     updated_date = models.DateField(default=timezone.now)
     def __str__(self):
         return f'{self.order_id} - {self.id_product.name}'
-
-
+class Total_Order(models.Model):
+    user_id = models.ForeignKey(Account, on_delete=models.CASCADE)
+    order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
+    id_product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    order_price = models.FloatField(default=0)
+    user_name = models.CharField(max_length=100, blank=True, null=True)
+    
 class TransportByEcm(models.Model):
     
     CREATE = 'Create'
