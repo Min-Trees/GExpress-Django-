@@ -1,0 +1,97 @@
+body{
+    background-color: rgb(155, 204, 246);
+}
+
+
+.appname .logan{
+    font-size: 120%;
+    margin-left:10%;
+    font-weight:lighter;
+
+}
+.appname .font-logo{
+    font-size: 150%;
+    margin-left:8%;
+    font-weight: bold;
+    text-decoration: none;
+    color:black
+}
+.img-register{
+    height: auto;
+    float: right;
+    position: absolute;
+    top: 10%;
+    right: 0;
+}
+
+.signup{
+    width: 22%;
+    border: 1px solid #708090;
+    margin-left: 10%;
+    margin-top: 3%;
+}   
+
+.signup h1{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.signup input{
+    width: 70%;
+    padding: 5px;
+    margin-left:10%;
+    border: 1px solid #708090;
+    border-radius: 10px;
+}
+#role{
+    margin-left: 10%;
+    padding: 5px;
+    width: 70%;
+    border: 1px solid #708090;
+    border-radius: 10px;
+
+}
+.msg{
+    margin-left: 10%;
+    padding: 4px;
+}
+
+.btn{
+    width: 70%;
+    padding: 5px;
+    margin-left:10%;
+    margin-top: 4%;
+    border: 1px solid #708090;
+    border-radius: 10px;
+    background-color: #77a6d5;
+    color: white;
+    cursor: pointer;
+}
+
+.signup .btn:hover{
+    background-color: #296eb4;
+    color: white;
+}
+
+.message-register p{
+    margin-left: 10%;
+    padding: 4px;
+}
+
+.btn-register{
+    border: 1px solid #708090;
+    border-radius: 10px;
+    background-color: #6ea8e2;
+    color: white;
+    cursor: pointer;
+
+
+}
+
+.btn-register:hover{
+    background-color: #c2c8ce;
+    color: white;
+}
+.btn-register a{
+    color: 708090;
+}

@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet"  type = "text/css" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet"  type = "text/css" href="{% static 'css/guesthome.css' %}">
 
 </head>
 <body>
@@ -17,15 +17,16 @@
                         <li><img src="{% static 'images/logo.jpg' %}" class="logo" width="50px"></li>
                         <li><a href="{% url 'home' %}">Trang chủ</a></li>
                         <li>
+                            
                             <a href="#">Dịch Vụ </a>
                                 <ul class="drop-down">
-                                    <li><a href="{% url 'create' %}">Dịch vụ vận chuyển</a></li>
+                                    <li><a href="{% url 'location' %}">Dịch vụ vận chuyển</a></li>
                                     <li><a href="#">Dịch vụ giao hàng</a></li>
                                     <li><a href="#">Ưu Đãi</a></li>
                                 </ul>
                         </li>
                         <li><a href="#">Liên hệ</a></li>
-                        <li><a href="{% url 'info_transport' %}">Tra cứu vận đơn</a></li>
+                        <li><a href="{% url 'location' %}">Tạo Vận Đơn</a></li>
 
                     </ul>
                 </div>
@@ -35,18 +36,23 @@
                             <a href="{% url 'profile' %}"> Tài Khoản</a>
                             <ul class="drop-down">
                                 <li><a href="profile">Hồ sơ của tôi</a></li>
-                                <li><a href="{% url 'total_order' user_id=request.user.user_id %}">Đơn hàng đã vận chuyển</a></li>
                                 <li><a href="#">Ưu Đãi</a></li>
                             </ul>
                         </li>
-                        <li><a href="{% url 'guest' %}">Đăng Xuất</a></li>
+                        <li><a href="{% url 'home' %}">Đăng Xuất</a></li>
                     </ul>
                 </div>
             </div>
-        <div class="container">
-            {% block content %}
-
-            {% endblock content %}
         </div>
+        <div class="container">
+            <div class="items">
+                <div class="main-item"><a href="{% url 'info_transport' %}">Tra cứu đơn hàng  <i class="fas fa-search"></i> </a></div>
+                <div class="main-item"><a href="">Đăng kí Shop <i class="fas fa-chevron-right"></i> </a></div>
+                <div class="main-item"><a href="">Bảng giá dịch vụ <i class="fas fa-table fa"></i></a></div>
+            </div>
+        </div>
+        {% block content %}
+        {% endblock content %}
+
 </body>
 </html>

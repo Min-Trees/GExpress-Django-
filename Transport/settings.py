@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -129,3 +130,11 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'Application.Account'
+# Initialize environ
+env = environ.Env()
+
+# Load environment variables from a file
+environ.Env.read_env()
+
+ACCOUNT_SID = 'ACb6cdb4e7a176cd538746f89af2fcfe7e'
+AUTH_TOKEN = 'bbdb816d02a958076f019dd5427dac78'

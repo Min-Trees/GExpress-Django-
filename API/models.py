@@ -31,12 +31,15 @@ class TranSport_API(models.Model):
     name_ownerShop = models.CharField(max_length = 200 , null = False , default = "")
     from_district = models.CharField(max_length=200, null=False, blank=True)
     from_province = models.CharField(max_length=200, null=False, blank=True)
+    address_sender = models.CharField(max_length = 2000 , null = False , default = "")
     # info customer
     name_customer = models.CharField(max_length = 200 , null = False , default = "")
     description = models.CharField(max_length = 2000 , null = True , default = "")
     customer_phone = models.CharField(max_length = 20 , null = False , default = "")
     to_district = models.CharField(max_length=200, null=False, blank=True)
     to_province = models.CharField(max_length=200, null=False, blank=True)
+    address_receiver = models.CharField(max_length = 2000 , null = False , default = "")
+    
     # list of post office( post office of sender and receiver) inserted 
     #calculate the expected date of delivery
     expected_date = models.DateField(default=default_expected_date)

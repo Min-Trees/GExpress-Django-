@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Select</title>
+</head>
+<body>
+    <h2>Chọn Tỉnh/Thành phố:</h2>
+    <select name="province" id="province_select" onchange="getDistricts()">
+        <option value="">Chọn Tỉnh/Thành phố</option>
+        {% for province in provinces %}
+            <option value="{{ province.id }}" {% if selected_province_id == province.id %}selected{% endif %}>{{ province.name }}</option>
+        {% endfor %}
+    </select>
+
+    <h2>Chọn Quận/Huyện:</h2>
+    <select name="district" id="district_select">
+        <option value="">Chọn Quận/Huyện</option>
+        {% for district in districts %}
+            <option value="{{ district.id }}">{{ district.name }}</option>
+        {% endfor %}
+    </select>
+
+    <script>
+        function getDistricts() {
+            var provinceSelect = document.getElementById("province_select");
+            var selectedProvinceId = provinceSelect.value;
+            var districtSelect = document.getElementById("district_select");
+
+            // Clear previous districts
+            districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>';
+
+            // Send Ajax request to get districts
+            if (selectedProvinceId) {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var districts = JSON.parse(xhr.responseText).results;
+                        districts.forEach(function(district) {
+                            var option = document.createElement("option");
+                            option.value = district.id;
+                            option.text = district.name;
+                            districtSelect.appendChild(option);
+                        });
+                    }
+                };
+                xhr.open("GET", "https://vnprovinces.pythonanywhere.com/api/districts/?province_id=" + selectedProvinceId + "&basic=true&limit=100", true);
+                xhr.send();
+            }
+        }
+    </script>
+</body>
+</html>

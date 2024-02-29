@@ -1,0 +1,86 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet"  type = "text/css" href="{% static 'css/info.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+</head>
+<body>
+        <div class="header">
+            <div class="navbar">
+                <div class="left-nav">
+                    <ul>
+                        <li><img src="{% static 'images/logo.jpg' %}" class="logo" width="50px"></li>
+                        <li><a href="{% url 'homew' %}">Trang chủ</a></li>
+                        <li>
+                            
+                            <a href="#">Dịch Vụ </a>
+                                <ul class="drop-down">
+                                    <li><a href="{% url 'location' %}">Dịch vụ vận chuyển</a></li>
+                                    <li><a href="#">Dịch vụ giao hàng</a></li>
+                                    <li><a href="#">Ưu Đãi</a></li>
+                                </ul>
+                        </li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="{% url 'location' %}">Tạo Vận Đơn</a></li>
+
+                    </ul>
+                </div>
+                <div class="right-nav">
+                    <ul>
+                        <li>
+                            <a href="{% url 'profile' %}"> Tài Khoản</a>
+                            <ul class="drop-down">
+                                <li><a href="profile">Hồ sơ của tôi</a></li>
+                                <li><a href="#">Ưu Đãi</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="{% url 'home' %}">Đăng Xuất</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="search">
+            <form method="POST" action="{% url 'info_transport' %}">
+                {% csrf_token %}
+                <label for="transport_code" >Nhập mã vận chuyển:</label>
+                <input type="text" name="transport_code" id="transport_code" required>
+                <button type="submit">Tìm</button>
+            </form>
+        </div>
+        
+        <div class="container">
+            {% if transport %}
+            <div class="info">
+                <h3>Thông tin vận chuyển : {{transport.status}}</h3>
+                <div class="info-colum">
+                    <p>Tên sản phẩm: {{ transport.product_name }}</p>
+                    <p>Số lượng: {{ transport.quantity }}</p>
+                    <p>Cân nặng: {{ transport.weight }} gr</p>
+                    <p>Mô tả sản phẩm: {{ transport.description }}</p>
+                    <p>Người gửi: {{ transport.name_ownerShop }}</p>
+                    <p>Nơi gửi: {{ transport.from_district }} , {{ transport.from_province }}</p>
+                    <p>Nơi nhận: {{ transport.name_customer }}</p>
+                    <p>Ngày nhận hàng dự kiến: {{transport.expected_date}}</p>
+                    <p>Tổng tiền: {{ transport.transport_price }} đ</p>
+                </div>
+            </div>
+        
+            {% else %}
+            <div class="info">
+                <h1>Thông tin vận chuyển :</h1>
+                <div class="info-colum">
+                    <p>Không tìm thấy mã vận chuyển</p>
+                </div>
+            {% endif %}
+        </div>
+
+
+</body>
+</html>

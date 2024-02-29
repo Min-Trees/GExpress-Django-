@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/apphome.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+</head>
+
+<body>
+    <div class="header">
+        <div class="navbar">
+            <div class="left-nav">
+                <ul>
+                    <li><img src="{% static 'images/logo.jpg' %}" class="logo" width="50px"></li>
+                    <li><a href="{% url 'guest' %}">Trang chủ</a></li>
+                    <li>
+                        <a href="#">Dịch Vụ </a>
+                        <ul class="drop-down">
+                            <li><a href="{% url 'location' %}">Dịch vụ vận chuyển</a></li>
+                            <li><a href="">Dịch vụ giao hàng</a></li>
+                            <li><a href="">Ưu Đãi</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Liên hệ</a></li>
+                    <li><a href="{% url 'login' %}">Tạo Vận Đơn</a></li>
+
+                </ul>
+            </div>
+            <div class="right-nav">
+                <ul>
+                    <li><a href="{% url 'signup' %}">Đăng Kí</a></li>
+                    <li><a href="{% url 'login' %}">Đăng Nhập</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="items">
+            <div class="main-item"><a href="{% url 'info_transport' %}">Tra cứu đơn hàng  <i class="fas fa-search"></i> </a></div>
+            <div class="main-item"><a href="">Đăng kí Shop <i class="fas fa-chevron-right"></i> </a></div>
+            <div class="main-item"><a href="">Bảng giá dịch vụ <i class="fas fa-table fa"></i></a></div>
+        </div>
+    </div>
+</body>
+
+</html>

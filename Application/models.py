@@ -10,6 +10,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 import secrets
+from django.views.decorators.csrf import csrf_exempt
 
 class AccountManager(BaseUserManager):
     def create_user(self, user_name, email, password=None, **extra_fields):
@@ -27,21 +28,12 @@ class AccountManager(BaseUserManager):
         return self.create_user(user_name, email, password, **extra_fields)
 
 class Account(AbstractBaseUser, PermissionsMixin):
-    CUSTOMER = 'Customer'
-    SHOP = 'Shop'
-    SHIPPER = 'Shipper'
-    ROLE_CHOICES = [
-        (CUSTOMER, 'Customer'),
-        (SHOP, 'Shop'),
-        (SHIPPER, 'Shipper')
-    ]
 
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_name = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=200, unique=True)
     phone = models.CharField(max_length=12, blank=True)
-    address = models.CharField(max_length=400, blank=True)
-    role = models.CharField(choices=ROLE_CHOICES, default=CUSTOMER, max_length=10)
+    
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -184,9 +176,9 @@ class Payment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     account_pay = models.CharField(max_length=20, null=False,   default='123456789')
     account_name = models.CharField(max_length=100, null=False, default='Nguyen Van A')
-    cvv_pay = models.IntegerField(max_length=3, null=False, default='123')
-    expiration_month = models.IntegerField(max_length=2, null=False, default='12')
-    expiration_year = models.IntegerField(max_length=4, null=False, default='2024')  
+    cvv_pay = models.IntegerField( null=False, default='123')
+    expiration_month = models.IntegerField( null=False, default='12')
+    expiration_year = models.IntegerField(null=False, default='2024')  
     created_date = models.DateField(default=timezone.now)
     updated_date = models.DateField(default=timezone.now)
 
@@ -195,3 +187,17 @@ class Payment(models.Model):
     
 class Payments(models.Model):
     pass
+
+class Province(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class District(models.Model):
+    name = models.CharField(max_length=100)
+    province = models.ForeignKey(Province, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+

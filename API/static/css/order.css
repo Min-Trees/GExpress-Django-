@@ -1,20 +1,21 @@
-body{
-    background-color:  #F0F8FF;
-}
 
-.wrapper h1{
+.wrapper h3{
     text-align: center;
-    font-size: 40px;
+    font-size: 24px;
     font-weight: 600;
-    margin-top: 20px;
 
+}
+.wrapper p {
+    margin-left: 3%;
+    font-size: 20px;
 }
 .wrapper{
-    border: #FF4500 3px solid;
-    width: 500px;
-    height:700px;
-    margin: auto;
-    border-radius: 30px;
+    border: #404792 1px solid;
+    width: 60%;
+    height:auto ;
+    border-radius: 0px;
+    margin-top: 10px;
+    margin: 0 auto;
 }
 
 .input-box{
@@ -23,19 +24,22 @@ body{
     margin-left: 40px;
     justify-content: center;
     width: 100%;
-    padding: 6px;
+    padding: 5px;
     font-size: 20px;
+    margin-bottom: 10px;
+
 }
 
 .input-box input{
     width: 80%;
-    height: 20px;
+    height: 16px;
     font-size: 16px;
-    color:#fff;
+    color:#090303;
     padding: 5px;
-    border-radius: 30px;
-    border:none;
+    border-radius: 5px;
     outline: none;
+    border: 1px solid #708090;
+
 }
 
 .wrapper label{
@@ -44,14 +48,30 @@ body{
 }
 
 .wrapper .btn{
-    width: 90%;
+    width: 81%;
     height: 50px;
     margin-left: 5%;
-    border-radius: 40px;
+    border-radius: 0px;
     font-size: 19px;
 }
 
 .wrapper .btn:hover{
-    background-color:#FF4500;
+    background-color:rgb(23, 158, 203);
     color: #090303;
+}
+.small-box input{
+    height: 20px;
+}
+
+.small-box div {
+    display: inline-block;
+    margin-right: 10px; 
+}
+
+.small-box{
+    margin-left: 5%;
+}
+ .agree label {
+    margin-left: 6%;
+    color:red;
 }

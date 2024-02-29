@@ -1,21 +1,20 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import Transport, Order , Payment , TransportByEcm , Total_Order
+from .models import Transport, Order , Payment , TransportByEcm 
 from .serializers import  Serializers_Transprot , Serializers_Order , Serializers_Transprot_By_Ecm
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from .models import Account
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.models import Group, Permission
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+import requests
+from django.core.cache import cache
+from .mixins import MessagseHandler
+import random 
+import string
 
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
@@ -26,6 +25,10 @@ class TransportViewSet(viewsets.ModelViewSet):
 class TransportByEcmViewSet(viewsets.ModelViewSet):
     queryset = TransportByEcm.objects.all()
     serializer_class = Serializers_Transprot_By_Ecm 
+
+
+def body(request):
+    return render(request, 'Application/home.html')
 
 def TransportByEcm(request):
     try:
@@ -124,35 +127,88 @@ def query_transport(request , userId):
 def register(request):
     if request.method == 'POST':
         user_name = request.POST['user_name']
-        password = request.POST['password']
         email = request.POST['email']
         phone = request.POST['phone']
-        address = request.POST['address']
-        pay = request.POST.get('pay', None)
-        role = request.POST['role']
         
-        Account.objects.create(user_name=user_name, password=password, email=email, phone=phone, address=address, pay=pay, role=role)
+        Account.objects.create(user_name=user_name,email=email, phone=phone)
         messages.success(request, 'Account created successfully. Please login.')
-            
         return redirect('login')
+       
+    
     return render(request, 'Application/signup.html')
+
+
+ 
+def generate_otp():
+    # Sinh ra một chuỗi ngẫu nhiên gồm 4 ký tự từ các chữ số
+    otp = ''.join(random.choices(string.digits, k=4))
+    return otp 
  
 def user_login(request):
     if request.method == 'POST':
-        user_name = request.POST['user_name']
-        password = request.POST['password']
+        otp_entered = request.POST.get('otp')
 
-        user = authenticate(request, username=user_name, password=password)
-        if user is not None:
-            login(request, user)
-            messages.success(request, 'Login successful.')
-            return redirect('home') 
+        # Lấy số điện thoại và OTP đã lưu từ cache
+        phone = request.session.get('phone')
+        saved_otp = request.session.get('otp')
+
+        if saved_otp and otp_entered == saved_otp:
+            # Xác thực thành công, xóa OTP khỏi cache và chuyển hướng đến trang chính
+            del request.session['phone']
+            del request.session['otp']
+            messages.success(request, 'Xác thực thành công!')
+            return redirect('home')
         else:
-            messages.error(request, 'Invalid username or password.')
-    return render(request, 'Application/login.html')
+            # Xác thực thất bại, thông báo lỗi và chuyển hướng lại đến trang đăng nhập
+            messages.error(request, 'Mã OTP không hợp lệ. Vui lòng thử lại.')
+            print('Mã OTP không hợp lệ. Vui lòng thử lại.')
+            return redirect('login')
+    else:
+        # Nếu không phải phương thức POST, hiển thị trang đăng nhập
+        return render(request, 'Application/login.html')
+    
+def send_otp(request):
+    if request.method == 'POST':
+        phone = request.POST.get('phone')
+        if not phone.startswith('+'):
+            phone = '+' + phone
+        otp = generate_otp()  # Tạo mã OTP mới
+        message_handler = MessagseHandler(phone, otp)
+        message_handler.send_otp(phone, otp)
+        request.session['phone'] = phone
+        request.session['otp'] = otp
 
+        # Ở đây bạn có thể gửi mã OTP đến số điện thoại đã nhập, ví dụ: gửi qua SMS
 
-def account_baking(request):
+        # Chuyển hướng đến trang để nhập OTP
+        return redirect('verify_otp')
+    else:
+        # Nếu không phải phương thức POST, chuyển hướng về trang đăng nhập
+        return redirect('login')
+
+def verify_otp(request):
+    if request.method == 'POST':
+        otp_entered = request.POST.get('otp')
+        # Lấy số điện thoại và OTP đã lưu từ session
+        phone = request.session.get('phone')
+        saved_otp = request.session.get('otp')
+
+        # Kiểm tra xem OTP nhập vào có khớp với OTP đã gửi hay không
+        if saved_otp and otp_entered == saved_otp:
+            # Nếu khớp, xóa thông tin về OTP khỏi session
+            del request.session['phone']
+            del request.session['otp']
+            # Hiển thị thông báo xác thực thành công và chuyển hướng đến trang chính
+            messages.success(request, 'Xác thực thành công!')
+            return redirect('homew')  # Đổi 'home' thành tên URL của trang chính của bạn
+        else:
+            # Nếu không khớp, hiển thị thông báo lỗi và chuyển hướng lại đến trang nhập OTP
+            messages.error(request, 'Mã OTP không hợp lệ. Vui lòng thử lại.')
+            return redirect('verify_otp')  # Đổi 'verify_otp' thành tên URL của trang xác minh OTP
+    else:
+        # Nếu không phải phương thức POST, hiển thị trang xác minh OTP
+        return render(request, 'Application/verify_otp.html')
+def account_baking(request):    
     if request.method == 'POST':
         account_pay = request.POST['account_pay']
         account_name = request.POST['account_name']
@@ -185,8 +241,6 @@ def check_order(request):
             messages.error(request, 'Invalid order id.')
     return render(request, 'Application/check_order.html')'''
     
-    
-
 def guest(request):
     return render(request, 'Application/guest.html')
 
@@ -202,3 +256,42 @@ def total_order(request, user_id):
         'orders': orders,
     }
     return render(request, 'Application/total_order.html', context)
+
+from .models import Province, District
+
+def location_select(request):
+    provinces = get_provinces()
+    selected_province_id = request.GET.get('province_id')
+    districts = get_districts(selected_province_id)
+    select_district_id = request.GET.get('district_id')
+    wards = get_wards(select_district_id)
+
+    return render(request, 'Application/create_transport.html', {'provinces': provinces, 'districts': districts, 'selected_province_id': selected_province_id, 'wards': wards, 'select_district_id': select_district_id})
+
+def get_provinces():
+    provinces_response = requests.get("https://vnprovinces.pythonanywhere.com/api/provinces/?basic=true&limit=100")
+    if provinces_response.status_code == 200:
+        provinces_data = provinces_response.json()
+        provinces = provinces_data.get('results', [])
+    else:
+        provinces = []
+    return provinces
+
+def get_districts(selected_province_id):
+    districts = []
+    if selected_province_id:
+        districts_response = requests.get(f"https://vnprovinces.pythonanywhere.com/api/districts/?province_id={selected_province_id}&basic=true&limit=100")
+        if districts_response.status_code == 200:
+            districts_data = districts_response.json()
+            districts = districts_data.get('results', [])
+    return districts
+
+def get_wards(selected_district_id):
+    wards = []
+    if selected_district_id:
+        wards_response = requests.get(f"https://vnprovinces.pythonanywhere.com/api/wards/?district_id={selected_district_id}&basic=true&limit=100")
+        if wards_response.status_code == 200:
+            wards_data = wards_response.json()
+            wards = wards_data.get('results', [])
+    print("wards:", wards)  # Thêm dấu hai chấm (:)
+    return wards

@@ -9,8 +9,10 @@ from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 
 
+
+
 def create(request):
-    return render(request, 'API/create_transport.html')
+    return render(request, 'Application/create_transport.html')
 
 def info(request):
     return render(request, 'API/info_transport.html')
@@ -308,12 +310,12 @@ def info_transport(request):
                 'transport': transport
             }
             print(context)
-            return render(request, 'API/info_transport.html', context)
+            return render(request, 'Application/info_transport.html', context)
         except:
-            return render(request, 'API/info_transport.html')
+            return render(request, 'Application/info_transport.html')
     else:
         # Xử lý trường hợp GET nếu cần
-        return render(request, 'API/info_transport.html')
+        return render(request, 'Application/info_transport.html')
 
 @csrf_exempt        
 def Search_Transport(request):
@@ -336,12 +338,14 @@ def Search_Transport(request):
                         "name_ownerShop": transport.name_ownerShop,
                         "from_district": transport.from_district,
                         "from_province": transport.from_province,
+                        "address_sender": transport.address_sender
                     },
                     "customer": {
                         "name_customer": transport.name_customer,
                         "customer_phone": transport.customer_phone,
                         "to_district": transport.to_district,
                         "to_province": transport.to_province,
+                        "address_receiver": transport.address_receiver
                     },
                     "order": {
                         "transport_code": transport.transport_code,
@@ -369,5 +373,3 @@ def Search_Transport(request):
             "body": {"data": False, "error": "not found"},
         }
         return JsonResponse(response_data, status=HTTPStatus.NOT_FOUND)
-    
-    
