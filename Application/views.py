@@ -140,7 +140,6 @@ def register(request):
 
  
 def generate_otp():
-    # Sinh ra một chuỗi ngẫu nhiên gồm 4 ký tự từ các chữ số
     otp = ''.join(random.choices(string.digits, k=4))
     return otp 
  
@@ -148,23 +147,19 @@ def user_login(request):
     if request.method == 'POST':
         otp_entered = request.POST.get('otp')
 
-        # Lấy số điện thoại và OTP đã lưu từ cache
         phone = request.session.get('phone')
         saved_otp = request.session.get('otp')
 
         if saved_otp and otp_entered == saved_otp:
-            # Xác thực thành công, xóa OTP khỏi cache và chuyển hướng đến trang chính
             del request.session['phone']
             del request.session['otp']
             messages.success(request, 'Xác thực thành công!')
             return redirect('home')
         else:
-            # Xác thực thất bại, thông báo lỗi và chuyển hướng lại đến trang đăng nhập
             messages.error(request, 'Mã OTP không hợp lệ. Vui lòng thử lại.')
             print('Mã OTP không hợp lệ. Vui lòng thử lại.')
             return redirect('login')
     else:
-        # Nếu không phải phương thức POST, hiển thị trang đăng nhập
         return render(request, 'Application/login.html')
     
 def send_otp(request):
@@ -177,36 +172,26 @@ def send_otp(request):
         message_handler.send_otp(phone, otp)
         request.session['phone'] = phone
         request.session['otp'] = otp
-
-        # Ở đây bạn có thể gửi mã OTP đến số điện thoại đã nhập, ví dụ: gửi qua SMS
-
-        # Chuyển hướng đến trang để nhập OTP
         return redirect('verify_otp')
     else:
-        # Nếu không phải phương thức POST, chuyển hướng về trang đăng nhập
         return redirect('login')
 
 def verify_otp(request):
     if request.method == 'POST':
         otp_entered = request.POST.get('otp')
-        # Lấy số điện thoại và OTP đã lưu từ session
         phone = request.session.get('phone')
         saved_otp = request.session.get('otp')
 
-        # Kiểm tra xem OTP nhập vào có khớp với OTP đã gửi hay không
         if saved_otp and otp_entered == saved_otp:
-            # Nếu khớp, xóa thông tin về OTP khỏi session
             del request.session['phone']
             del request.session['otp']
-            # Hiển thị thông báo xác thực thành công và chuyển hướng đến trang chính
             messages.success(request, 'Xác thực thành công!')
-            return redirect('homew')  # Đổi 'home' thành tên URL của trang chính của bạn
+            return redirect('homew')  
         else:
-            # Nếu không khớp, hiển thị thông báo lỗi và chuyển hướng lại đến trang nhập OTP
             messages.error(request, 'Mã OTP không hợp lệ. Vui lòng thử lại.')
-            return redirect('verify_otp')  # Đổi 'verify_otp' thành tên URL của trang xác minh OTP
+            return redirect('verify_otp')  
     else:
-        # Nếu không phải phương thức POST, hiển thị trang xác minh OTP
+        
         return render(request, 'Application/verify_otp.html')
 def account_baking(request):    
     if request.method == 'POST':
@@ -293,5 +278,5 @@ def get_wards(selected_district_id):
         if wards_response.status_code == 200:
             wards_data = wards_response.json()
             wards = wards_data.get('results', [])
-    print("wards:", wards)  # Thêm dấu hai chấm (:)
+    print("wards:", wards)  
     return wards

@@ -37,7 +37,7 @@
                     {% endfor %}
                 </select>
             
-                <select name="district_sender" id="district_select_sender" onchange="onDistrictChange(this)">
+                <select name="district_sender" id="district_select_sender" onchange="onDistrictChangeForSender(this)">
                     <option value="">Chọn Quận/Huyện</option>
                 </select>
             
@@ -64,7 +64,7 @@
                     {% endfor %}
                 </select>
                 
-                <select name="district_receiver" id="district_select_receiver" onchange="onDistrictChange(this)">
+                <select name="district_receiver" id="district_select_receiver" onchange="onDistrictChangeForReceiver(this)">
                     <option value="">Chọn Quận/Huyện</option>
                 </select>
                 
@@ -86,11 +86,9 @@
     </div>
     <script>
         function getDistricts(selectedProvinceId, districtSelectElement, wardSelectElement) {
-            // Clear previous districts and wards
             districtSelectElement.innerHTML = '<option value="">Chọn Quận/Huyện</option>';
             wardSelectElement.innerHTML = '<option value="">Chọn Phường/Xã</option>';
 
-            // Send Ajax request to get districts
             if (selectedProvinceId) {
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function () {
@@ -110,10 +108,8 @@
         }
 
         function getWards(selectedDistrictId, wardSelectElement) {
-            // Clear previous wards
             wardSelectElement.innerHTML = '<option value="">Chọn Phường/Xã</option>';
 
-            // Send Ajax request to get wards
             if (selectedDistrictId) {
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function () {
@@ -133,26 +129,33 @@
         }
 
         function getDistrictsFromSender() {
-            var provinceSelect = document.getElementById("province_select_sender");
-            var selectedProvinceId = provinceSelect.value;
-            var districtSelect = document.getElementById("district_select_sender");
-            var wardSelect = document.getElementById("ward_select_sender");
-            getDistricts(selectedProvinceId, districtSelect, wardSelect);
-        }
+        var provinceSelect = document.getElementById("province_select_sender");
+        var selectedProvinceId = provinceSelect.value;
+        var districtSelect = document.getElementById("district_select_sender");
+        var wardSelect = document.getElementById("ward_select_sender");
+        getDistricts(selectedProvinceId, districtSelect, wardSelect);
+    }
 
-        function getDistrictsFromReceiver() {
-            var provinceSelect = document.getElementById("province_select_receiver");
-            var selectedProvinceId = provinceSelect.value;
-            var districtSelect = document.getElementById("district_select_receiver");
-            var wardSelect = document.getElementById("ward_select_receiver");
-            getDistricts(selectedProvinceId, districtSelect, wardSelect);
-        }
+    function getDistrictsFromReceiver() {
+        var provinceSelect = document.getElementById("province_select_receiver");
+        var selectedProvinceId = provinceSelect.value;
+        var districtSelect = document.getElementById("district_select_receiver");
+        var wardSelect = document.getElementById("ward_select_receiver");
+        getDistricts(selectedProvinceId, districtSelect, wardSelect);
+    }
 
-        function onDistrictChange(selectElement) {
-            var selectedDistrictId = selectElement.value;
-            var wardSelectElement = selectElement.parentElement.querySelector("#ward_select_receiver"); // Sửa lại id của ô chọn phường/xã của người nhận
-            getWards(selectedDistrictId, wardSelectElement);
-        }
+    function onDistrictChangeForSender(selectElement) {
+        var selectedDistrictId = selectElement.value;
+        var wardSelectElement = document.getElementById("ward_select_sender");
+        getWards(selectedDistrictId, wardSelectElement);
+    }
+
+    function onDistrictChangeForReceiver(selectElement) {
+        var selectedDistrictId = selectElement.value;
+        var wardSelectElement = document.getElementById("ward_select_receiver");
+        getWards(selectedDistrictId, wardSelectElement);
+    }
+
     </script>
 </body>
 </html>
