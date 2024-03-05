@@ -137,4 +137,4 @@ env = environ.Env()
 environ.Env.read_env()
 
 ACCOUNT_SID = 'ACb6cdb4e7a176cd538746f89af2fcfe7e'
-AUTH_TOKEN = '6a90c569711f698c5c9d9ec77a49f45f'
+AUTH_TOKEN = '95836b97d8af5e5fcb2a8ab2f17d908b'
